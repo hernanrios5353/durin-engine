@@ -349,11 +349,10 @@ El script ejecuta 7 pasos:
 
 | Servicio | URL |
 |---|---|
-| Frontend (Cloudflare Pages) | _Pendiente de configurar_ |
-| Backend API (Render) | _Pendiente de configurar_ |
-| Health Check | _Pendiente de configurar_ |
-
-> Estas URLs se actualizan despues del primer despliegue exitoso.
+| Frontend (Cloudflare Pages) | https://durin-engine.pages.dev |
+| Backend API (Render) | https://durin-engine-api.onrender.com |
+| Health Check | https://durin-engine-api.onrender.com/health |
+| Repositorio GitHub | https://github.com/hernanrios5353/durin-engine |
 
 ---
 
