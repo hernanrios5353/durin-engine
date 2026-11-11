@@ -1,0 +1,60 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-durin-bg: #0B1120;
+  --color-durin-panel: #111827;
+  --color-durin-panel-alt: #1F2937;
+  --color-durin-border: #1E293B;
+  --color-durin-primary: #3B82F6;
+  --color-durin-primary-hover: #2563EB;
+  --color-durin-secondary: #06B6D4;
+  --color-durin-text: #F8FAFC;
+  --color-durin-muted: #94A3B8;
+  --color-durin-success: #10B981;
+  --color-durin-warning: #F59E0B;
+  --color-durin-danger: #EF4444;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --radius-durin: 0.75rem;
+  --shadow-durin: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+}
+
+/* Forzamos que las variables existan en :root para los SCSS de los componentes */
+:root {
+  --color-durin-bg: #0B1120;
+  --color-durin-panel: #111827;
+  --color-durin-panel-alt: #1F2937;
+  --color-durin-border: #1E293B;
+  --color-durin-primary: #3B82F6;
+  --color-durin-primary-hover: #2563EB;
+  --color-durin-secondary: #06B6D4;
+  --color-durin-text: #F8FAFC;
+  --color-durin-muted: #94A3B8;
+  --color-durin-success: #10B981;
+  --color-durin-warning: #F59E0B;
+  --color-durin-danger: #EF4444;
+}
+
+@layer base {
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-durin-bg);
+    color: var(--color-durin-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--color-durin-bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-durin-border);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-durin-muted); }
+}

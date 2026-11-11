@@ -1,0 +1,144 @@
+﻿<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Equipos</h1>
+      <p class="page-subtitle">Gestión de equipos mineros</p>
+    </div>
+    <button class="btn-primary" (click)="openModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4v16m8-8H4" />
+      </svg>
+      Nuevo Equipo
+    </button>
+  </div>
+
+  <div class="filters-bar">
+    <div class="filter-group">
+      <input
+        type="text"
+        placeholder="Buscar por código..."
+        class="input-field"
+        [value]="searchCode()"
+        (input)="searchCode.set($any($event.target).value)"
+      />
+      <select class="input-field" [value]="filterType()" (change)="filterType.set($any($event.target).value)">
+        <option value="">Todos los tipos</option>
+        <option value="CAMION">Camión</option>
+        <option value="EXCAVADORA">Excavadora</option>
+        <option value="PERFORADORA">Perforadora</option>
+      </select>
+      <select class="input-field" [value]="filterStatus()" (change)="filterStatus.set($any($event.target).value)">
+        <option value="">Todos los estados</option>
+        <option value="OPERATIVO">Operativo</option>
+        <option value="REQUIERE_MANTENIMIENTO">Requiere Mantenimiento</option>
+      </select>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="state-message">Cargando equipos...</div>
+  } @else if (error()) {
+    <div class="state-message error">{{ error() }}</div>
+  } @else {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Horómetro Actual</th>
+            <th>Estado</th>
+            <th class="text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (eq of filteredEquipments(); track eq.id) {
+            <tr>
+              <td class="font-mono font-bold">{{ eq.code }}</td>
+              <td>{{ eq.name }}</td>
+              <td>{{ eq.type }}</td>
+              <td>{{ eq.currentHourmeter }} hrs</td>
+              <td>
+                <span class="badge" [class.badge-success]="eq.status === 'OPERATIVO'" [class.badge-danger]="eq.status === 'REQUIERE_MANTENIMIENTO'">
+                  {{ eq.status === 'OPERATIVO' ? 'Operativo' : 'Requiere Mtto' }}
+                </span>
+              </td>
+              <td class="text-right actions-cell">
+                <button class="btn-icon" (click)="openModal(eq)" title="Editar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+                <button class="btn-icon btn-icon-danger" (click)="onDelete(eq.id, eq.code)" title="Eliminar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="state-message">No se encontraron equipos.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Modal -->
+@if (isModalOpen()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>{{ editingId() ? 'Editar Equipo' : 'Nuevo Equipo' }}</h2>
+        <button class="btn-close" (click)="closeModal()">&times;</button>
+      </div>
+      
+      <form [formGroup]="equipmentForm" (ngSubmit)="onSubmit()" class="modal-body">
+        @if (submitError()) {
+          <div class="form-error">{{ submitError() }}</div>
+        }
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Código Único</label>
+            <input type="text" formControlName="code" class="input-field" placeholder="Ej. CAM-001" />
+          </div>
+          <div class="form-group">
+            <label>Tipo</label>
+            <select formControlName="type" class="input-field">
+              <option value="CAMION">Camión</option>
+              <option value="EXCAVADORA">Excavadora</option>
+              <option value="PERFORADORA">Perforadora</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Nombre / Descripción</label>
+          <input type="text" formControlName="name" class="input-field" placeholder="Ej. Camión Minero 001" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Horómetro Actual (hrs)</label>
+            <input type="number" formControlName="currentHourmeter" class="input-field" />
+          </div>
+          <div class="form-group">
+            <label>Horómetro Último Mtto (hrs)</label>
+            <input type="number" formControlName="lastMaintenanceHourmeter" class="input-field" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Intervalo de Mantenimiento (hrs)</label>
+          <input type="number" formControlName="maintenanceInterval" class="input-field" />
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-primary" [disabled]="equipmentForm.invalid">Guardar Equipo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

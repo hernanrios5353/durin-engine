@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: durin-postgres
+    environment:
+      POSTGRES_USER: durin_user
+      POSTGRES_PASSWORD: durin_password
+      POSTGRES_DB: durin_engine
+    ports:
+      - "5433:5432"
+    volumes:
+      - durin_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U durin_user -d durin_engine"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  durin_pgdata:

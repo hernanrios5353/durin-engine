@@ -1,0 +1,107 @@
+﻿.sidebar {
+  width: 16rem;
+  flex-shrink: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-durin-panel);
+  border-right: 1px solid var(--color-durin-border);
+}
+
+.sidebar-brand {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--color-durin-border);
+}
+
+.sidebar-logo {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--color-durin-primary), var(--color-durin-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.sidebar-logo svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  color: var(--color-durin-text);
+}
+
+.sidebar-subtitle {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-durin-muted);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-durin-muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.nav-item:hover {
+  color: var(--color-durin-text);
+  background-color: var(--color-durin-panel-alt);
+}
+
+.nav-item.active {
+  color: var(--color-durin-primary);
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left-color: var(--color-durin-primary);
+}
+
+.nav-icon {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+}
+
+.nav-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--color-durin-border);
+}
+
+.sidebar-version {
+  font-size: 0.625rem;
+  color: var(--color-durin-muted);
+}

@@ -1,0 +1,112 @@
+﻿<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Mantenimientos</h1>
+      <p class="page-subtitle">Registro e historial de intervenciones</p>
+    </div>
+    <button class="btn-primary" (click)="openModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4v16m8-8H4" />
+      </svg>
+      Registrar Mantenimiento
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="state-message">Cargando mantenimientos...</div>
+  } @else {
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Equipo</th>
+            <th>Tipo</th>
+            <th>Horómetro</th>
+            <th>Descripción</th>
+            <th>Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of maintenances(); track m.id) {
+            <tr>
+              <td>{{ m.maintenanceDate | date:'short' }}</td>
+              <td>
+                <span class="font-bold">{{ m.equipment?.code }}</span>
+                <span class="text-muted"> — {{ m.equipment?.name }}</span>
+              </td>
+              <td>
+                <span class="badge badge-info">{{ m.maintenanceType }}</span>
+              </td>
+              <td>{{ m.hourmeter }} hrs</td>
+              <td>{{ m.description }}</td>
+              <td class="text-muted">{{ m.observations || '-' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="state-message">No hay mantenimientos registrados.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Modal -->
+@if (isModalOpen()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Registrar Mantenimiento</h2>
+        <button class="btn-close" (click)="closeModal()">&times;</button>
+      </div>
+      
+      <form [formGroup]="maintenanceForm" (ngSubmit)="onSubmit()" class="modal-body">
+        @if (submitError()) {
+          <div class="form-error">{{ submitError() }}</div>
+        }
+
+        <div class="form-group">
+          <label>Equipo</label>
+          <select formControlName="equipmentId" class="input-field">
+            <option value="" disabled>Seleccione un equipo</option>
+            @for (eq of equipments(); track eq.id) {
+              <option [value]="eq.id">{{ eq.code }} — {{ eq.name }} (Actual: {{ eq.currentHourmeter }} hrs)</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de Mantenimiento</label>
+            <select formControlName="maintenanceType" class="input-field">
+              <option value="PREVENTIVO">Preventivo</option>
+              <option value="CORRECTIVO">Correctivo</option>
+              <option value="PREDICTIVO">Predictivo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Horómetro Registrado (hrs)</label>
+            <input type="number" formControlName="hourmeter" class="input-field" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Descripción del trabajo</label>
+          <input type="text" formControlName="description" class="input-field" placeholder="Ej. Cambio de aceite y filtros" />
+        </div>
+
+        <div class="form-group">
+          <label>Observaciones (Opcional)</label>
+          <textarea formControlName="observations" class="input-field" rows="3" placeholder="Detalles adicionales..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="btn-primary" [disabled]="maintenanceForm.invalid">Guardar Registro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

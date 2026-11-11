@@ -1,0 +1,120 @@
+﻿.page {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-durin-text);
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-durin-muted);
+  margin: 0.25rem 0 0 0;
+}
+
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--color-durin-panel);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-durin-border);
+}
+
+.input-field {
+  background-color: var(--color-durin-bg);
+  border: 1px solid var(--color-durin-border);
+  color: var(--color-durin-text);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.input-field:focus {
+  border-color: var(--color-durin-primary);
+}
+
+.table-container {
+  background-color: var(--color-durin-panel);
+  border: 1px solid var(--color-durin-border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-durin-border);
+  font-size: 0.875rem;
+}
+
+.data-table th {
+  background-color: var(--color-durin-panel-alt);
+  color: var(--color-durin-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.data-table td {
+  color: var(--color-durin-text);
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+.text-muted {
+  color: var(--color-durin-muted);
+}
+
+.state-message {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-durin-muted);
+  font-size: 0.875rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-info {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: var(--color-durin-secondary);
+}

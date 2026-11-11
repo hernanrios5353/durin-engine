@@ -1,0 +1,17 @@
+﻿.layout {
+  display: flex;
+  height: 100vh;
+  background-color: var(--color-durin-bg);
+}
+
+.layout-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.layout-content {
+  flex: 1;
+  overflow-y: auto;
+}
