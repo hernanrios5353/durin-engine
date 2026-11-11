@@ -17,7 +17,7 @@ export const maintenanceController = {
 
   async getById(req: Request, res: Response) {
     try {
-      const maintenance = await maintenanceService.findById(req.params.id);
+      const maintenance = await maintenanceService.findById(req.params.id as string);
       if (!maintenance) {
         return res.status(404).json({ error: 'Mantenimiento no encontrado' });
       }
@@ -29,7 +29,7 @@ export const maintenanceController = {
 
   async listByEquipment(req: Request, res: Response) {
     try {
-      const maintenances = await maintenanceService.findByEquipment(req.params.id);
+      const maintenances = await maintenanceService.findByEquipment(req.params.id as string);
       res.json({ data: maintenances, total: maintenances.length });
     } catch {
       res.status(500).json({ error: 'Error al listar mantenimientos del equipo' });

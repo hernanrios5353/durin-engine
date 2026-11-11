@@ -22,7 +22,7 @@ export const equipmentController = {
 
   async getById(req: Request, res: Response) {
     try {
-      const equipment = await equipmentService.findById(req.params.id);
+      const equipment = await equipmentService.findById(req.params.id as string);
       if (!equipment) {
         return res.status(404).json({ error: 'Equipo no encontrado' });
       }
@@ -69,7 +69,7 @@ export const equipmentController = {
     }
 
     try {
-      const equipment = await equipmentService.update(req.params.id, parsed.data);
+      const equipment = await equipmentService.update(req.params.id as string, parsed.data);
       res.json({ data: equipment });
     } catch (error) {
       if (error instanceof Error) {
@@ -89,7 +89,7 @@ export const equipmentController = {
 
   async delete(req: Request, res: Response) {
     try {
-      await equipmentService.delete(req.params.id);
+      await equipmentService.delete(req.params.id as string);
       res.status(204).send();
     } catch (error) {
       if (error instanceof Error && error.message === 'NOT_FOUND') {
