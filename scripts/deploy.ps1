@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # DURIN ENGINE - Deploy automatizado
 # ============================================================
 # Uso: .\scripts\deploy.ps1
@@ -46,7 +46,7 @@ function Write-Warn {
 }
 
 # ============================================================
-# PASO 0: Detectar raíz del proyecto
+# PASO 0: Detectar raÃ­z del proyecto
 # ============================================================
 $ROOT = Split-Path -Parent $PSScriptRoot
 Set-Location $ROOT
@@ -103,7 +103,7 @@ try {
 
 # Archivo .env.deploy
 if (-not (Test-Path ".env.deploy")) {
-    Write-Fail "Falta .env.deploy en la raíz del proyecto"
+    Write-Fail "Falta .env.deploy en la raÃ­z del proyecto"
 }
 
 # Cargar .env.deploy
@@ -162,7 +162,7 @@ try {
     npm run build
     if ($LASTEXITCODE -ne 0) {
         Pop-Location
-        Write-Fail "Build backend falló"
+        Write-Fail "Build backend fallÃ³"
     }
     Write-OK "Build backend"
 } finally {
@@ -170,7 +170,7 @@ try {
 }
 
 # ============================================================
-# PASO 4: Migraciones Neon (producción)
+# PASO 4: Migraciones Neon (producciÃ³n)
 # ============================================================
 Write-Step "4/7 Migraciones base de datos (Neon)"
 
@@ -212,7 +212,7 @@ export const environment = {
     npx ng build --configuration=production
     if ($LASTEXITCODE -ne 0) {
         Pop-Location
-        Write-Fail "Build frontend falló"
+        Write-Fail "Build frontend fallÃ³"
     }
     Write-OK "Build frontend production"
 } finally {
@@ -222,7 +222,7 @@ export const environment = {
 # ============================================================
 # PASO 6a: Deploy backend (disparar Render Deploy Hook)
 # ============================================================
-Write-Step "6/7 Deploy backend (Render)"
+Write-Step "6a/7 Deploy backend (Render)"
 
 try {
     $renderResponse = Invoke-RestMethod -Uri $envVars["RENDER_DEPLOY_HOOK"] -Method Get
@@ -231,8 +231,8 @@ try {
     Write-Fail "No se pudo disparar el deploy de Render: $_"
 }
 
-# Esperar a que Render termine el deploy y el servicio esté Live
-Write-Host "    Esperando deploy de Render (máx 5 min)..." -ForegroundColor $YELLOW
+# Esperar a que Render termine el deploy y el servicio estÃ© Live
+Write-Host "    Esperando deploy de Render (mÃ¡x 5 min)..." -ForegroundColor $YELLOW
 $maxWait = 300
 $elapsed = 0
 $healthOk = $false
@@ -252,14 +252,14 @@ while ($elapsed -lt $maxWait) {
 }
 
 if (-not $healthOk) {
-    Write-Fail "Render no respondió /health OK después de 5 min"
+    Write-Fail "Render no respondiÃ³ /health OK despuÃ©s de 5 min"
 }
 Write-OK "Backend live: $($envVars["PROD_API_URL"])/health"
 
 # ============================================================
 # PASO 6b: Deploy frontend (Cloudflare Pages)
 # ============================================================
-Write-Step "6/7 Deploy frontend (Cloudflare Pages)"
+Write-Step "6b/7 Deploy frontend (Cloudflare Pages)"
 
 $env:CLOUDFLARE_API_TOKEN = $envVars["CLOUDFLARE_API_TOKEN"]
 $env:CLOUDFLARE_ACCOUNT_ID = $envVars["CLOUDFLARE_ACCOUNT_ID"]
@@ -269,7 +269,7 @@ try {
         npx --yes wrangler@latest pages deploy dist/frontend/browser --project-name=$($envVars["CLOUDFLARE_PROJECT_NAME"]) --branch=main --commit-dirty=true
     if ($LASTEXITCODE -ne 0) {
         Pop-Location
-        Write-Fail "Deploy a Cloudflare Pages falló"
+        Write-Fail "Deploy a Cloudflare Pages fallÃ³"
     }
     Write-OK "Cloudflare Pages deploy exitoso"
 } finally {
@@ -279,9 +279,9 @@ try {
 }
 
 # ============================================================
-# PASO 7: Verificación final
+# PASO 7: VerificaciÃ³n final
 # ============================================================
-Write-Step "7/7 Verificación final"
+Write-Step "7/7 VerificaciÃ³n final"
 
 # Backend /health
 try {
@@ -301,7 +301,7 @@ try {
     if ($frontResponse.StatusCode -eq 200) {
         Write-OK "Frontend responde HTTP 200"
     } else {
-        Write-Fail "Frontend respondió HTTP $($frontResponse.StatusCode)"
+        Write-Fail "Frontend respondiÃ³ HTTP $($frontResponse.StatusCode)"
     }
 } catch {
     Write-Fail "Frontend no responde"
