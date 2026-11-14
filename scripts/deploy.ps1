@@ -89,16 +89,16 @@ try {
     Write-Fail "git no encontrado"
 }
 
-# Wrangler
+# Wrangler (via npx para no depender de instalacion global)
 try {
-    $wranglerOutput = (& wrangler --version 2>&1 | Out-String).Trim()
+    $wranglerOutput = (& npx --yes wrangler@latest --version 2>&1 | Out-String).Trim()
     if ($wranglerOutput -match '(\d+\.\d+\.\d+)') {
-        Write-OK "wrangler $($matches[1])"
+        Write-OK "wrangler $($matches[1]) (via npx)"
     } else {
         Write-Fail "wrangler no responde correctamente (output: $wranglerOutput)"
     }
 } catch {
-    Write-Fail "wrangler no encontrado (npm install -g wrangler)"
+    Write-Fail "wrangler no disponible via npx"
 }
 
 # Archivo .env.deploy
@@ -133,15 +133,19 @@ Write-Step "2/7 Tests backend"
 
 Push-Location backend
 try {
-    Write-Host "    Ejecutando tests..." -ForegroundColor $YELLOW
+    Write-Host "    Ejecutando tests en DB local..." -ForegroundColor $YELLOW
+    $env:DATABASE_URL = "postgresql://durin_user:durin_password@localhost:5433/durin_engine?schema=public"
     npm test
-    if ($LASTEXITCODE -ne 0) {
+    $testExitCode = $LASTEXITCODE
+    Remove-Item Env:\DATABASE_URL -ErrorAction SilentlyContinue
+    if ($testExitCode -ne 0) {
         Pop-Location
         Write-Fail "Tests backend fallaron"
     }
-    Write-OK "Tests backend (16/16)"
+    Write-OK "Tests backend (16/16) en DB local"
 } finally {
     Pop-Location -ErrorAction SilentlyContinue
+    Remove-Item Env:\DATABASE_URL -ErrorAction SilentlyContinue
 }
 
 # ============================================================
@@ -262,7 +266,7 @@ $env:CLOUDFLARE_ACCOUNT_ID = $envVars["CLOUDFLARE_ACCOUNT_ID"]
 
 Push-Location frontend
 try {
-    wrangler pages deploy dist/frontend/browser --project-name=$($envVars["CLOUDFLARE_PROJECT_NAME"]) --branch=main --commit-dirty=true
+        npx --yes wrangler@latest pages deploy dist/frontend/browser --project-name=$($envVars["CLOUDFLARE_PROJECT_NAME"]) --branch=main --commit-dirty=true
     if ($LASTEXITCODE -ne 0) {
         Pop-Location
         Write-Fail "Deploy a Cloudflare Pages falló"
