@@ -327,19 +327,25 @@ npx ng build --configuration=production
 
 **Un solo comando publica todo:**
 
-\`\`\`powershell
 .\scripts\deploy.ps1
-\`\`\`
 
-El script ejecuta 7 pasos:
+El script ejecuta 7 fases de forma secuencial. Si cualquier paso falla, el script se detiene y devuelve un código de error distinto de cero.
 
-1. **Validaciones**: Node, npm, Angular, Wrangler, Git, variables de entorno.
-2. **Build**: instala dependencias, ejecuta tests, compila backend y frontend.
-3. **Migraciones**: `prisma migrate deploy` en produccion (nunca reset).
-4. **Deploy backend**: sube a Render via API deploy hook.
-5. **Deploy frontend**: `wrangler pages deploy` a Cloudflare.
-6. **Health checks**: `GET /health` y `GET /` del frontend.
-7. **Resumen**: tabla con [OK] / [FAIL] por paso.
+1. **Validaciones previas**: Verifica que Node.js (v22+), npm, Git y Wrangler estén instalados. Comprueba que el archivo `.env.deploy` contenga las 7 variables obligatorias (tokens de Cloudflare, URL de Neon, etc.).
+
+2. **Tests backend**: Ejecuta los 16 tests automatizados con Vitest contra una base de datos local (Docker), garantizando que los cambios no rompan la lógica de negocio antes de tocar producción.
+
+3. **Build backend**: Compila el código TypeScript a JavaScript (`dist/`) listo para ser ejecutado por Node.js en Render.
+
+4. **Migraciones**: Ejecuta `prisma migrate deploy` contra la base de datos PostgreSQL en Neon. Aplica solo los cambios estructurales sin borrar datos existentes.
+
+5. **Build frontend**: Compila Angular en modo producción (`ng build --configuration=production`), optimizando los assets y apuntando a la URL real del backend.
+
+6. **Deploy backend**: Dispara un nuevo despliegue en Render usando el Deploy Hook (API) y espera en un bucle hasta que el endpoint `/health` responda `status: ok`.
+
+7. **Deploy frontend**: Sube los archivos estáticos a Cloudflare Pages con `wrangler pages deploy`. Solo sube los archivos que hayan cambiado.
+
+8. **Verificación final**: Realiza peticiones HTTP reales a las URLs públicas (`GET /health` y `GET /`) para confirmar que ambos servicios estén operativos antes de dar el despliegue por exitoso.
 
 **Si algo falla, el script retorna codigo de salida != 0** y no continua con los pasos siguientes. Es idempotente.
 
